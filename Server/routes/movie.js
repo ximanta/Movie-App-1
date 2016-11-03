@@ -10,7 +10,7 @@ router.route("/add")
     var movieVar = new Movie(req.body);
     Movie.findOne(obj,function(err,data){
       if(data){
-          res.send("Movie cant be inserted as its Previously there");
+          res.send("Movie already exist");
       }
     else{
       movieVar.save(function(err){

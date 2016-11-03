@@ -1,5 +1,5 @@
 var React = require('react');
-var MovieBox = require('./MovieBox1');
+var MovieBox = require('./MovieBox');
 var Container = React.createClass({
 render:function(){
   var MovieArray=[];

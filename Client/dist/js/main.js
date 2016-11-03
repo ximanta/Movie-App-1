@@ -20769,7 +20769,7 @@ var But = React.createClass({displayName: "But",
 module.exports = But;
 },{"react":171}],173:[function(require,module,exports){
 var React = require('react');
-var MovieBox = require('./MovieBox1');
+var MovieBox = require('./MovieBox');
 var Container = React.createClass({displayName: "Container",
 render:function(){
   var MovieArray=[];
@@ -20790,7 +20790,7 @@ return (
 }
 });
 module.exports = Container;
-},{"./MovieBox1":174,"react":171}],174:[function(require,module,exports){
+},{"./MovieBox":174,"react":171}],174:[function(require,module,exports){
 var React = require('react');
 var But = require('./But');
 var MovieBox = React.createClass({displayName: "MovieBox",
@@ -20817,7 +20817,7 @@ var MovieBox = React.createClass({displayName: "MovieBox",
       ), 
       React.createElement("div", {className: "col-md-10"}, 
       React.createElement("h1", null, this.props.dataM.Title), 
-        React.createElement("p", null, "IMDB Id : ", this.props.dataM.imdbID, React.createElement("br", null), "Year : ", this.props.dataM.Year), 
+        React.createElement("p", null, "IMDB Id : ", this.props.dataM.imdbID, React.createElement("br", null), "Year : ", this.props.dataM.Year, React.createElement("br", null), "Type : ", this.props.dataM.Type), 
         React.createElement("div", {className: "row"}, 
         React.createElement("div", {className: "col-md-2"}, 
         React.createElement(But, {class: "btn btn-primary", clickHandler: this.addMovieToDB, btnText: "Add"})
@@ -20845,12 +20845,49 @@ var Search = React.createClass({displayName: "Search",
   changeHandler:function(event){
     this.props.changeHandler.call(null,event.target.value);
   },
-
+  runScript:function(e) {
+    if (e.key == 'Enter') {
+        this.props.clickHandler.call(null);
+    }
+},
   render:function(){
     return (
       React.createElement("div", null, 
-     React.createElement("input", {type: "text", onChange: this.changeHandler}), 
-     React.createElement(But, {class: "btn btn-warning", btnText: "Search", clickHandler: this.props.clickHandler})
+      React.createElement("div", {className: "container-fluid"}, 
+   	React.createElement("div", {className: "row"}, 
+   		React.createElement("div", {className: "col-md-12"}, 
+   			React.createElement("nav", {className: "navbar navbar-default", role: "navigation"}, 
+   				React.createElement("div", {className: "navbar-header"}, 
+
+   					React.createElement("button", {type: "button", className: "navbar-toggle", "data-toggle": "collapse", "data-target": "#bs-example-navbar-collapse-1"}, 
+   						 React.createElement("span", {className: "sr-only"}, "Toggle navigation"), React.createElement("span", {className: "icon-bar"}), React.createElement("span", {className: "icon-bar"}), React.createElement("span", {className: "icon-bar"})
+   					), " ", React.createElement("a", {className: "navbar-brand", href: "#"}, "React Movie App")
+   				), 
+
+   				React.createElement("div", {className: "collapse navbar-collapse", id: "bs-example-navbar-collapse-1"}, 
+   					React.createElement("ul", {className: "nav navbar-nav"}, 
+   						React.createElement("li", {className: "active"}, 
+   							React.createElement("a", {href: "#"}, "Search")
+   						), 
+   						React.createElement("li", null, 
+   							React.createElement("a", {href: "#"}, "All Movies")
+   						)
+   					), 
+   					React.createElement("div", {className: "navbar-form navbar-left form-group", role: "search"}, 
+               React.createElement("input", {className: "form-control", type: "text", onChange: this.changeHandler, onKeyPress: this.runScript}), 
+              React.createElement("button", {className: "btn btn-warning", onClick: this.props.clickHandler}, "Search")
+   					), 
+   					React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
+   						React.createElement("li", null, 
+   							React.createElement("a", {href: "#"}, "My Account")
+   						)
+   					)
+   				)
+
+   			)
+   		)
+   	)
+   )
       )
     )
   }
