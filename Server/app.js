@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../Client/dist')));
 
 
-mongoose.connect("mongodb://localhost/mYmoviedb");
+mongoose.connect("mongodb://localhost/movieDB");
 var db = mongoose.connection;
 db.on('error',console.error.bind(console,'Connection error.......!!!!!'));
 db.once('open',function(){

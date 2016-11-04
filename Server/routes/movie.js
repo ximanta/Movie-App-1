@@ -19,7 +19,7 @@ router.route("/add")
           res.send(err);
         }
         else {
-          res.send("Movie Inserted");
+          res.send("Movie Added as Favorite");
         }
       });
     }
@@ -54,8 +54,8 @@ router.route("/delete")
     var obj = {};
     obj[Object.keys(req.query)[0]]=req.query[Object.keys(req.query)[0]];
     Movie.remove(obj,function(err,data){
-      data = data[Object.keys(data)[0]];
-      data = data[Object.keys(data)[1]];
+      data = data[Object.keys(data)[0]];//  result: { ok: 1, n: 1 },
+      data = data[Object.keys(data)[1]];// value of n(number of rows)
 
       if(data!=0)
       {
