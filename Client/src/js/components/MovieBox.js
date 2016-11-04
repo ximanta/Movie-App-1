@@ -1,5 +1,4 @@
 var React = require('react');
-var But = require('./But');
 var MovieBox = React.createClass({
   addMovieToDB:function(){
         $.ajax({
@@ -27,11 +26,11 @@ var MovieBox = React.createClass({
         <p>IMDB Id : {this.props.dataM.imdbID}<br/>Year : {this.props.dataM.Year}<br />Type : {this.props.dataM.Type}</p>
         <div className="row">
         <div className="col-md-2">
-        <But class="btn btn-primary" clickHandler={this.addMovieToDB} btnText="Add"/>
+        <button className="btn btn-primary" onClick={this.addMovieToDB}>Add</button>
         </div>
         <div className="col-md-2">
         <a href={linkIMDB} target="_blank">
-        <But class="btn btn-success" btnText="View on IMDB"/>
+        <button className="btn btn-success" >View on IMDB</button>
         </a>
         </div>
         </div>

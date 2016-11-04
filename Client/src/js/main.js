@@ -1,47 +1,24 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var Search = require("./components/Search");
-var Container = require("./components/Container");
+var {hashHistory,Route,Router,IndexRoute}=require('react-router');
+var Home = require("./components/home");
+var Navbar = require('./components/Navbar');
+var FavMovie = require('./components/FavMovie');
 var MainComponent = React.createClass({
-  getMovieData :function(title){
-    $.ajax({
-      url:'http://www.omdbapi.com/?s='+title,
-      type:'GET',
-      dataType:'JSON',
-      success:function(data){
-        if(data.hasOwnProperty("Search")){
-        this.setState({dataMovie:data.Search});
-      }
-        else {
-          this.setState({dataMovie:data});
-        }
-      }.bind(this),
-      error:function(err){
-        console.log(err);
-      }.bind(this)
-    });
-  },
-  clickHandler:function(){
-   var text = this.state.Tvalue;
-    this.getMovieData(text);
-  },
-  getInitialState:function(){
-    return {
-      Tvalue : "",
-      dataMovie : []
-    };
-  },
-  changeHandler:function(data){
-    this.setState({Tvalue:data});
-  },
   render:function(){
     return (
       <div>
-        <Search clickHandler={this.clickHandler} changeHandler={this.changeHandler}/><br/>
-        <Container dataC = {this.state.dataMovie} />
+      <Navbar />
+      {this.props.children}
       </div>
     )
   }
 });
-ReactDOM.render(<MainComponent />,
+ReactDOM.render(
+  <Router history={hashHistory}>
+  <Route path="/" component={MainComponent}>
+  <Route path="/search" component={Home}/>
+  <Route path="/favorite" component={FavMovie}/>
+    </Route>
+    </Router>,
 document.getElementById('app'));
