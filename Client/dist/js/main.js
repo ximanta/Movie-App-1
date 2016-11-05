@@ -26400,14 +26400,22 @@ var Search = React.createClass({displayName: "Search",
 },
   render:function(){
     return (
-      React.createElement("div", null, 
-   React.createElement("input", {className: "form-control", type: "text", onChange: this.changeHandler, onKeyPress: this.runScript}), 
-  React.createElement("button", {className: "btn btn-warning", onClick: this.props.clickHandler}, "Search")
-      )
+      React.createElement("div", {style: {backgroundColor:'#B2BABB '}, className: "jumbotron text-center"}, 
+             React.createElement("h1", null, "Search Your Movie"), 
+             React.createElement("p", null, "Enter movie name"), 
+             React.createElement("input", {type: "text", size: "50", onChange: this.changeHandler, onKeyPress: this.runScript}), 
+              React.createElement("input", {type: "button", className: "btn btn-warning", value: "Search", onClick: this.props.clickHandler})
+         )
+
     )
   }
 });
 module.exports = Search;
+/*<div>
+<input className="form-control" type="text" onChange={this.changeHandler} />
+<button className="btn btn-warning" onClick={this.props.clickHandler} >Search</button>
+</div>
+*/
 },{"react":232}],241:[function(require,module,exports){
 var React = require('react');
 var Search = require("./Search");

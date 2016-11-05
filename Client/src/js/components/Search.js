@@ -11,11 +11,19 @@ var Search = React.createClass({
 },
   render:function(){
     return (
-      <div>
-   <input className="form-control" type="text" onChange={this.changeHandler} onKeyPress={this.runScript}/>
-  <button className="btn btn-warning" onClick={this.props.clickHandler} >Search</button>
-      </div>
+      <div style={{backgroundColor:'#B2BABB '}} className="jumbotron text-center" >
+             <h1>Search Your Movie</h1>
+             <p>Enter movie name</p>
+             <input type="text"   size="50"  onChange={this.changeHandler} onKeyPress={this.runScript} />
+              <input type="button"   className="btn btn-warning" value="Search" onClick={this.props.clickHandler} />
+         </div>
+
     )
   }
 });
 module.exports = Search;
+/*<div>
+<input className="form-control" type="text" onChange={this.changeHandler} />
+<button className="btn btn-warning" onClick={this.props.clickHandler} >Search</button>
+</div>
+*/
