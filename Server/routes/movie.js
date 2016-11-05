@@ -7,7 +7,7 @@ router.route("/add")
   if(req.body)
   {
     var obj = {'imdbID':req.body.imdbID};
-    req.body["Comment"]="No Comments yet";
+    req.body["Comment"]="No Comments yet, Be the first one to Comment";
     var movieVar = new Movie(req.body);
     Movie.findOne(obj,function(err,data){
       if(data){
@@ -72,16 +72,11 @@ router.route("/delete")
 
 router.route("/update")
 .put(function(req,res){
-  var arr = Object.keys(req.body);
-  if(arr.length>0)
+  var obj = req.body;
+  if(Object.keys(obj).length>0)
   {
-    var obj = {};
-    for(var i = 1; i < arr.length; i++) {
-      obj[arr[i]] = req.body[arr[i]];
-    }
+    var b = {'imdbID':obj['imdbID']};
     obj = {"$set":obj};
-    var b = {};
-    b[arr[0]]= req.body[arr[0]];
     Movie.update(b,obj,function(err,data){
       res.send("data updated with \n"+JSON.stringify(data));
     });

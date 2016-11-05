@@ -26163,6 +26163,34 @@ var FavMovie = React.createClass({displayName: "FavMovie",
       MovieArray:[]
     });
   },
+  onUpdateStateHandler:function(imdbID,Comment){
+    var temp = this.state.MovieArray;
+    var j=-1;
+    for(var i=0;i<temp.length;i++){
+      if(temp[i].imdbID==imdbID)
+      {
+        j=i;
+        break;
+      }
+    }
+    temp[i]["Comment"]=Comment;
+    this.setState({MovieArray:temp});
+  },
+  onDeleteStateHandler: function(imdbID){
+    var temp = this.state.MovieArray;
+    var j=-1;
+    for(var i=0;i<temp.length;i++){
+      if(temp[i].imdbID==imdbID)
+      {
+        j=i;
+        break;
+      }
+    }
+    if(j>-1){
+      temp.splice(j,1);
+    }
+    this.setState({MovieArray:temp});
+  },
   getMoviesFromDB:function(){
     $.ajax({
     url:'http://localhost:8080/movie/get',
@@ -26170,14 +26198,13 @@ var FavMovie = React.createClass({displayName: "FavMovie",
     dataType:'JSON',
     success:function(data){
       this.setState({MovieArray:data});
-      console.log("success");
     }.bind(this),
     error:function(err){
       console.log(err);
     }.bind(this)
   });
   },
-  componentWillMount:function(){
+  componentDidMount:function(){
     this.getMoviesFromDB();
   },
   render:function(){
@@ -26186,8 +26213,10 @@ var FavMovie = React.createClass({displayName: "FavMovie",
       ArrayBox = React.createElement("h3", null, "No Movie Added to Favorite yet!")
     }
     else{
+      var delHandler=this.onDeleteStateHandler;
+      var upHandler = this.onUpdateStateHandler;
     ArrayBox = this.state.MovieArray.map(function(dataitem){
-     return React.createElement(FavMovieBox, {dataM: dataitem, refresh: this.componentWillMount})
+     return React.createElement(FavMovieBox, {deleteStateHandlerRef: delHandler, updateStateHandlerRef: upHandler, dataM: dataitem})
    });
   }
   return (
@@ -26201,18 +26230,46 @@ module.exports = FavMovie;
 },{"./FavMovieBox":237,"react":232}],237:[function(require,module,exports){
 var React = require('react');
 var FavMovieBox = React.createClass({displayName: "FavMovieBox",
+  getInitialState:function(){
+    return ({
+      com:{imdbID:this.props.dataM.imdbID,Comment:""}
+    });
+  },
+  updateCommentfromDB:function(c){
+    var updateHandler = this.props.updateStateHandlerRef.bind(null,this.props.dataM.imdbID,c);
+    $.ajax({
+    url:'http://localhost:8080/movie/update',
+    type:'PUT',
+    data:this.state.com,
+    success:function(data){
+    //  alert(data);
+      updateHandler();
+    }.bind(this),
+    error:function(err){
+      console.log(err);
+    }.bind(this)
+  });
+  },
+  onCommentChange:function(evt){
+    var temp = this.state.com;
+    temp["Comment"] = prompt("Enter comment","");
+    this.setState({com:temp});
+    this.updateCommentfromDB(temp["Comment"]);
+  },
   deleteMovieFromDB:function(){
+    var deleteMovieHandler=this.props.deleteStateHandlerRef.bind(null,this.props.dataM.imdbID);
         $.ajax({
         url:'http://localhost:8080/movie/delete?imdbID='+this.props.dataM.imdbID,
         type:'DELETE',
         success:function(data){
-          alert(data);
-          (typeof this.props.refresh);
+          deleteMovieHandler();
+        //  alert(data);
         }.bind(this),
         error:function(err){
           console.log(err);
         }.bind(this)
       });
+
   },
   render:function(){
     var linkIMDB = "http://www.imdb.com/title/"+this.props.dataM.imdbID;
@@ -26227,10 +26284,10 @@ var FavMovieBox = React.createClass({displayName: "FavMovieBox",
         React.createElement("p", null, "IMDB Id : ", this.props.dataM.imdbID, React.createElement("br", null), "Year : ", this.props.dataM.Year, React.createElement("br", null), "Type : ", this.props.dataM.Type, React.createElement("br", null), "Comment : ", this.props.dataM.Comment), 
         React.createElement("div", {className: "row"}, 
         React.createElement("div", {className: "col-md-2"}, 
-        React.createElement("button", {className: "btn btn-primary"}, "Update")
+        React.createElement("button", {className: "btn btn-primary", onClick: this.onCommentChange}, "Comment")
         ), 
         React.createElement("div", {className: "col-md-2"}, 
-        React.createElement("button", {className: "btn btn-success", onClick: this.deleteMovieFromDB}, "Delete")
+        React.createElement("button", {className: "btn btn-danger", onClick: this.deleteMovieFromDB}, "Delete")
         )
         )
       )
