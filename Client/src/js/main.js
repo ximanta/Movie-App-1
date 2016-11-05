@@ -17,6 +17,7 @@ var MainComponent = React.createClass({
 ReactDOM.render(
   <Router history={hashHistory}>
   <Route path="/" component={MainComponent}>
+  <IndexRoute component={Home}/>
   <Route path="/search" component={Home}/>
   <Route path="/favorite" component={FavMovie}/>
     </Route>

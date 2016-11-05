@@ -26154,22 +26154,95 @@ return (
 }
 });
 module.exports = Container;
-},{"./MovieBox":237,"react":232}],236:[function(require,module,exports){
+},{"./MovieBox":238,"react":232}],236:[function(require,module,exports){
 var React = require('react');
+var FavMovieBox = require('./FavMovieBox');
 var FavMovie = React.createClass({displayName: "FavMovie",
-  fetchMovie:function(){
-
+  getInitialState:function(){
+    return ({
+      MovieArray:[]
+    });
+  },
+  getMoviesFromDB:function(){
+    $.ajax({
+    url:'http://localhost:8080/movie/get',
+    type:'GET',
+    dataType:'JSON',
+    success:function(data){
+      this.setState({MovieArray:data});
+      console.log("success");
+    }.bind(this),
+    error:function(err){
+      console.log(err);
+    }.bind(this)
+  });
+  },
+  componentWillMount:function(){
+    this.getMoviesFromDB();
   },
   render:function(){
-    return (
-      React.createElement("div", null, 
-        React.createElement("h1", null, "Hello from all movies")
-      )
+    var ArrayBox=[];
+    if(this.state.MovieArray.length==0){
+      ArrayBox = React.createElement("h3", null, "No Movie Added to Favorite yet!")
+    }
+    else{
+    ArrayBox = this.state.MovieArray.map(function(dataitem){
+     return React.createElement(FavMovieBox, {dataM: dataitem, refresh: this.componentWillMount})
+   });
+  }
+  return (
+    React.createElement("div", null, 
+      ArrayBox
     )
+  )
   }
 });
 module.exports = FavMovie;
-},{"react":232}],237:[function(require,module,exports){
+},{"./FavMovieBox":237,"react":232}],237:[function(require,module,exports){
+var React = require('react');
+var FavMovieBox = React.createClass({displayName: "FavMovieBox",
+  deleteMovieFromDB:function(){
+        $.ajax({
+        url:'http://localhost:8080/movie/delete?imdbID='+this.props.dataM.imdbID,
+        type:'DELETE',
+        success:function(data){
+          alert(data);
+          (typeof this.props.refresh);
+        }.bind(this),
+        error:function(err){
+          console.log(err);
+        }.bind(this)
+      });
+  },
+  render:function(){
+    var linkIMDB = "http://www.imdb.com/title/"+this.props.dataM.imdbID;
+    return (
+      React.createElement("div", {className: "container-fluid"}, 
+      React.createElement("div", {className: "row"}, 
+      React.createElement("div", {className: "col-md-2"}, 
+      React.createElement("img", {src: this.props.dataM.Poster, alt: this.props.dataM.Title, width: "200px"})
+      ), 
+      React.createElement("div", {className: "col-md-10"}, 
+      React.createElement("h1", null, this.props.dataM.Title), 
+        React.createElement("p", null, "IMDB Id : ", this.props.dataM.imdbID, React.createElement("br", null), "Year : ", this.props.dataM.Year, React.createElement("br", null), "Type : ", this.props.dataM.Type, React.createElement("br", null), "Comment : ", this.props.dataM.Comment), 
+        React.createElement("div", {className: "row"}, 
+        React.createElement("div", {className: "col-md-2"}, 
+        React.createElement("button", {className: "btn btn-primary"}, "Update")
+        ), 
+        React.createElement("div", {className: "col-md-2"}, 
+        React.createElement("button", {className: "btn btn-success", onClick: this.deleteMovieFromDB}, "Delete")
+        )
+        )
+      )
+      ), 
+      React.createElement("br", null)
+      )
+
+    )
+  }
+});
+module.exports = FavMovieBox;
+},{"react":232}],238:[function(require,module,exports){
 var React = require('react');
 var MovieBox = React.createClass({displayName: "MovieBox",
   addMovieToDB:function(){
@@ -26198,7 +26271,7 @@ var MovieBox = React.createClass({displayName: "MovieBox",
         React.createElement("p", null, "IMDB Id : ", this.props.dataM.imdbID, React.createElement("br", null), "Year : ", this.props.dataM.Year, React.createElement("br", null), "Type : ", this.props.dataM.Type), 
         React.createElement("div", {className: "row"}, 
         React.createElement("div", {className: "col-md-2"}, 
-        React.createElement("button", {className: "btn btn-primary", onClick: this.addMovieToDB}, "Add\"")
+        React.createElement("button", {className: "btn btn-primary", onClick: this.addMovieToDB}, "Add")
         ), 
         React.createElement("div", {className: "col-md-2"}, 
         React.createElement("a", {href: linkIMDB, target: "_blank"}, 
@@ -26215,7 +26288,7 @@ var MovieBox = React.createClass({displayName: "MovieBox",
   }
 });
 module.exports = MovieBox;
-},{"react":232}],238:[function(require,module,exports){
+},{"react":232}],239:[function(require,module,exports){
 var React = require('react');
 var {Link} = require('react-router');
 var Navbar = React.createClass({displayName: "Navbar",
@@ -26256,7 +26329,7 @@ React.createElement("div", {className: "row"},
   }
 });
 module.exports = Navbar;
-},{"react":232,"react-router":81}],239:[function(require,module,exports){
+},{"react":232,"react-router":81}],240:[function(require,module,exports){
 var React = require('react');
 var Search = React.createClass({displayName: "Search",
 
@@ -26278,7 +26351,7 @@ var Search = React.createClass({displayName: "Search",
   }
 });
 module.exports = Search;
-},{"react":232}],240:[function(require,module,exports){
+},{"react":232}],241:[function(require,module,exports){
 var React = require('react');
 var Search = require("./Search");
 var Container = require("./Container");
@@ -26324,7 +26397,7 @@ var Home = React.createClass({displayName: "Home",
   }
 });
 module.exports = Home;
-},{"./Container":235,"./Search":239,"react":232}],241:[function(require,module,exports){
+},{"./Container":235,"./Search":240,"react":232}],242:[function(require,module,exports){
 var React = require('react');
 var ReactDOM = require('react-dom');
 var {hashHistory,Route,Router,IndexRoute}=require('react-router');
@@ -26344,9 +26417,10 @@ var MainComponent = React.createClass({displayName: "MainComponent",
 ReactDOM.render(
   React.createElement(Router, {history: hashHistory}, 
   React.createElement(Route, {path: "/", component: MainComponent}, 
+  React.createElement(IndexRoute, {component: Home}), 
   React.createElement(Route, {path: "/search", component: Home}), 
   React.createElement(Route, {path: "/favorite", component: FavMovie})
     )
     ),
 document.getElementById('app'));
-},{"./components/FavMovie":236,"./components/Navbar":238,"./components/home":240,"react":232,"react-dom":51,"react-router":81}]},{},[241]);
+},{"./components/FavMovie":236,"./components/Navbar":239,"./components/home":241,"react":232,"react-dom":51,"react-router":81}]},{},[242]);

@@ -7,6 +7,7 @@ router.route("/add")
   if(req.body)
   {
     var obj = {'imdbID':req.body.imdbID};
+    req.body["Comment"]="No Comments yet";
     var movieVar = new Movie(req.body);
     Movie.findOne(obj,function(err,data){
       if(data){
@@ -42,7 +43,7 @@ router.route("/get")
   }
   else {
     Movie.find(function(err, data){
-        res.send(data);
+        res.json(data);
     });
   }
 });

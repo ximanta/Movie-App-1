@@ -6,7 +6,8 @@ var movieDetailsSchema = new Schema({
   Year : String,
   imdbID: String,
   Type:String,
-  Poster:String
+  Poster:String,
+  Comment:String
 });
 
 module.exports = mongoose.model('MovieDetails',movieDetailsSchema);
