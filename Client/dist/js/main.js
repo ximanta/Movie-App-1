@@ -26252,9 +26252,12 @@ var FavMovieBox = React.createClass({displayName: "FavMovieBox",
   },
   onCommentChange:function(evt){
     var temp = this.state.com;
-    temp["Comment"] = prompt("Enter comment","");
-    this.setState({com:temp});
-    this.updateCommentfromDB(temp["Comment"]);
+    var c = prompt("Enter comment",this.props.dataM.Comment);
+    if(c!=null){
+      temp["Comment"]=c;
+      this.setState({com:temp});
+      this.updateCommentfromDB(temp["Comment"]);
+    }
   },
   deleteMovieFromDB:function(){
     var deleteMovieHandler=this.props.deleteStateHandlerRef.bind(null,this.props.dataM.imdbID);

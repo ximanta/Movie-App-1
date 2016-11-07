@@ -81,8 +81,6 @@ router.route("/update")
       res.send("data updated with \n"+JSON.stringify(data));
     });
   }
-
-
 });
 
 module.exports = router;
