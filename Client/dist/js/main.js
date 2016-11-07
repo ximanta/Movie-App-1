@@ -26230,17 +26230,12 @@ module.exports = FavMovie;
 },{"./FavMovieBox":237,"react":232}],237:[function(require,module,exports){
 var React = require('react');
 var FavMovieBox = React.createClass({displayName: "FavMovieBox",
-  getInitialState:function(){
-    return ({
-      com:{imdbID:this.props.dataM.imdbID,Comment:""}
-    });
-  },
   updateCommentfromDB:function(c){
     var updateHandler = this.props.updateStateHandlerRef.bind(null,this.props.dataM.imdbID,c);
     $.ajax({
     url:'http://localhost:8080/movie/update',
     type:'PUT',
-    data:this.state.com,
+    data:{imdbID:this.props.dataM.imdbID,Comment:c},
     success:function(data){
     //  alert(data);
       updateHandler();
@@ -26251,12 +26246,11 @@ var FavMovieBox = React.createClass({displayName: "FavMovieBox",
   });
   },
   onCommentChange:function(evt){
-    var temp = this.state.com;
     var c = prompt("Enter comment",this.props.dataM.Comment);
     if(c!=null){
-      temp["Comment"]=c;
-      this.setState({com:temp});
-      this.updateCommentfromDB(temp["Comment"]);
+      if(c!=this.props.dataM.Comment||true){
+        this.updateCommentfromDB(c);
+      }
     }
   },
   deleteMovieFromDB:function(){
