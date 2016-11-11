@@ -8,16 +8,16 @@ gulp.task('browserify',function(){
         .transform('reactify')
         .bundle()
         .pipe(source('main.js'))//the actual source
-        .pipe(gulp.dest('dist/js'))//destination for the source
+        .pipe(gulp.dest('../Server/dist/js'))//destination for the source
 });
 
 gulp.task('copy',function(){
     gulp.src('src/*.html')
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('../Server/dist'));
     gulp.src('src/css/*.*')
-        .pipe(gulp.dest('dist/css'));
+        .pipe(gulp.dest('../Server/dist/css'));
     gulp.src('src/js/vendors/*.*')
-        .pipe(gulp.dest('dist/js'));
+        .pipe(gulp.dest('../Server/dist/js'));
 });
 
 gulp.task('default',['browserify','copy'],function(){

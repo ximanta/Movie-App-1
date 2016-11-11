@@ -3,21 +3,34 @@ var router = express.Router();
 var User = require('../models/users')
 /* GET users listing.*/
 
-router.route("/add")
+router.route('/add')
 .post(function(req,res){
   if(req.body)
-  {
-    var userVar = new User(req.body);
-    userVar.save(function(err){
-      if(err)
-      {
-        res.send(err);
+    {
+      var userVar = new User(req.body);
+      User.findOne({username:req.body.username},function(err,data){
+        if(err){
+        res.send("Some error Occured");
       }
-      else {
-        res.send("User Inserted");
-      }
-    });
-  }
+        else if(data){
+          res.send("User previously there")
+        }
+        else{
+          userVar.save(function(err){
+            if(err)
+            {
+              res.send(err);
+            }
+            else {
+              res.send("User Inserted");
+            }
+          });
+        }
+      });
+    }
+    else{
+      res.send("No data received");
+    }
 });
 /*
 router.get('/', function(req, res, next) {

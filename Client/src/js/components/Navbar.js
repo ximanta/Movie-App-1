@@ -24,8 +24,14 @@ var Navbar = React.createClass({
           </li>
         </ul>
         <ul className="nav navbar-nav navbar-right">
+        <li>
+          <Link to="/logout">Logout</Link>
+        </li>
+        <li>
+          <Link to="/login">Login</Link>
+        </li>
           <li>
-            <a href="#">My Account</a>
+            <Link to="/signup">Sign Up</Link>
           </li>
         </ul>
       </div>

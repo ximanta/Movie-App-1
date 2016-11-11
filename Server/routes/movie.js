@@ -2,8 +2,17 @@ var express = require('express');
 var router = express.Router();
 var Movie = require('../models/movie')
 
+function isLoggedIn(req,res,next){
+  if(req.isAuthenticated()){
+    return next();
+  }
+  else{
+    res.json("User Unauthenticated");
+  }
+}
+
 router.route("/add")
-.post(function(req,res){
+.post(isLoggedIn,function(req,res){
   if(req.body)
   {
     var obj = {'imdbID':req.body.imdbID};
@@ -14,7 +23,7 @@ router.route("/add")
           res.send("Movie already exist");
       }
     else{
-      movieVar.save(function(err){
+    movieVar.save(function(err){
         if(err)
         {
           res.send(err);
@@ -29,7 +38,7 @@ router.route("/add")
 });
 
 router.route("/get")
-.get(function(req,res) {
+.get(isLoggedIn,function(req,res) {
   if(Object.keys(req.query).length>0)
   {
     var obj = {};
@@ -49,7 +58,7 @@ router.route("/get")
 });
 
 router.route("/delete")
-.delete(function(req,res) {
+.delete(isLoggedIn,function(req,res) {
   if(req.query)
   {
     var obj = {};
@@ -60,7 +69,7 @@ router.route("/delete")
 
       if(data!=0)
       {
-        data = "data deleted succesfully \nNumber of row deleted = "+data;
+        data = "data deleted succesfully";
       }
       else {
         data = "data deletion unsuccessfull due to unavailability of data";
@@ -71,14 +80,14 @@ router.route("/delete")
 });
 
 router.route("/update")
-.put(function(req,res){
+.put(isLoggedIn,function(req,res){
   var obj = req.body;
   if(Object.keys(obj).length>0)
   {
     var b = {'imdbID':obj['imdbID']};
     obj = {"$set":obj};
     Movie.update(b,obj,function(err,data){
-      res.send("data updated with \n"+JSON.stringify(data));
+      res.send("data updated with succesfully");
     });
   }
 });

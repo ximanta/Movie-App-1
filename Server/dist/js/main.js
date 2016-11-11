@@ -26369,8 +26369,14 @@ React.createElement("div", {className: "row"},
           )
         ), 
         React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
+        React.createElement("li", null, 
+          React.createElement(Link, {to: "/logout"}, "Logout")
+        ), 
+        React.createElement("li", null, 
+          React.createElement(Link, {to: "/login"}, "Login")
+        ), 
           React.createElement("li", null, 
-            React.createElement("a", {href: "#"}, "My Account")
+            React.createElement(Link, {to: "/signup"}, "Sign Up")
           )
         )
       )
@@ -26461,11 +26467,129 @@ var Home = React.createClass({displayName: "Home",
 module.exports = Home;
 },{"./Container":235,"./Search":240,"react":232}],242:[function(require,module,exports){
 var React = require('react');
+var {browserHistory} = require('react-router');
+var Login = React.createClass({displayName: "Login",
+  getInitialState:function(){
+    return {
+      username:"",
+      password:""
+    };
+  },
+  UserChangeHandler:function(evt){
+    this.setState({username:evt.target.value});
+  },
+  PassChangehandler:function(evt){
+    this.setState({password:evt.target.value});
+  },
+  ClickHandler:function(){
+    $.ajax({
+      url:"http://localhost:8080/login",
+      type:'POST',
+      data:{username:this.state.username,password:this.state.password},
+      success:function(data){
+      //  alert(data);
+      browserHistory.push("/search");
+      }.bind(this),
+      error:function(err){
+        console.log(err);
+      }.bind(this)
+    });
+  },
+render:function(){
+  return (
+    React.createElement("div", null, 
+    React.createElement("p", null, "Username:"), React.createElement("input", {type: "text", onChange: this.UserChangeHandler}), 
+    React.createElement("p", null, "Password:"), React.createElement("input", {type: "password", onChange: this.PassChangehandler}), 
+    React.createElement("p", null, React.createElement("input", {type: "button", onClick: this.ClickHandler, value: "Login"}))
+    )
+  )
+}
+});
+module.exports= Login;
+},{"react":232,"react-router":81}],243:[function(require,module,exports){
+var React = require('react');
+var {browserHistory} = require('react-router');
+var Logout = React.createClass({displayName: "Logout",
+  getInitialState:function(){
+    return {
+      status:"Not"
+    }
+  },
+  componentWillMount:function(){
+    $.ajax({
+      url:"http://localhost:8080/logout",
+      type:"GET",
+      success:function(data){
+        console.log(data);
+        this.changeState();
+        browserHistory.push("/");
+      }.bind(this),
+      error:function(err){
+        console.log(err);
+      }.bind(this)
+    });
+  },
+  changeState:function(){
+    this.setState({status:""});
+  },
+  render:function(){
+    return (
+      React.createElement("div", null, 
+      React.createElement("h3", null, "User ", this.state.status, " Logged Out")
+      )
+    )
+  }
+});
+module.exports = Logout;
+},{"react":232,"react-router":81}],244:[function(require,module,exports){
+var React = require('react');
+var SignUp = React.createClass({displayName: "SignUp",
+  getInitialState:function(){
+    return {
+      username:"",
+      password:""
+    };
+  },
+  UserChangeHandler:function(evt){
+    this.setState({username:evt.target.value});
+  },
+  PassChangehandler:function(evt){
+    this.setState({password:evt.target.value});
+  },
+  ClickHandler:function(){
+    $.ajax({
+      url:"http://localhost:8080/users/add",
+      type:"POST",
+      data:{username:this.state.username,password:this.state.password},
+      success:function(data){
+        alert(data);
+      }.bind(this),
+      error:function(){
+        console.log(err);
+      }.bind(this)
+    });
+  },
+render:function(){
+  return (
+    React.createElement("div", null, 
+    React.createElement("p", null, "Username:"), React.createElement("input", {type: "text", onChange: this.UserChangeHandler}), 
+    React.createElement("p", null, "Password:"), React.createElement("input", {type: "password", onChange: this.PassChangehandler}), 
+    React.createElement("p", null, React.createElement("input", {type: "button", onClick: this.ClickHandler, value: "Sign Up"}))
+    )
+  )
+}
+});
+module.exports= SignUp;
+},{"react":232}],245:[function(require,module,exports){
+var React = require('react');
 var ReactDOM = require('react-dom');
-var {hashHistory,Route,Router,IndexRoute}=require('react-router');
+var {browserHistory,Route,Router,IndexRoute}=require('react-router');
 var Home = require("./components/home");
 var Navbar = require('./components/Navbar');
 var FavMovie = require('./components/FavMovie');
+var Signup = require('./components/signup');
+var Login = require('./components/login');
+var Logout = require('./components/logout');
 var MainComponent = React.createClass({displayName: "MainComponent",
   render:function(){
     return (
@@ -26477,12 +26601,15 @@ var MainComponent = React.createClass({displayName: "MainComponent",
   }
 });
 ReactDOM.render(
-  React.createElement(Router, {history: hashHistory}, 
+  React.createElement(Router, {history: browserHistory}, 
   React.createElement(Route, {path: "/", component: MainComponent}, 
-  React.createElement(IndexRoute, {component: Home}), 
+  React.createElement(IndexRoute, {component: Login}), 
   React.createElement(Route, {path: "/search", component: Home}), 
-  React.createElement(Route, {path: "/favorite", component: FavMovie})
+  React.createElement(Route, {path: "/favorite", component: FavMovie}), 
+  React.createElement(Route, {path: "/logout", component: Logout}), 
+  React.createElement(Route, {path: "/login", component: Login}), 
+  React.createElement(Route, {path: "/signup", component: Signup})
     )
     ),
 document.getElementById('app'));
-},{"./components/FavMovie":236,"./components/Navbar":239,"./components/home":241,"react":232,"react-dom":51,"react-router":81}]},{},[242]);
+},{"./components/FavMovie":236,"./components/Navbar":239,"./components/home":241,"./components/login":242,"./components/logout":243,"./components/signup":244,"react":232,"react-dom":51,"react-router":81}]},{},[245]);
