@@ -1,1 +1,1 @@
-# Movie-App
+# Movie-Application developed using MERN stack
